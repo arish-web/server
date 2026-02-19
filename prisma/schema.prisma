@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+enum LessonType {
+  TEXT
+  QUIZ
+}
+
+enum BookingStatus {
+  REQUESTED
+  APPROVED
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  users     User[]
+  courses   Course[]
+  bookings  Booking[]
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  approved     Boolean  @default(false)
+
+  refreshToken String? 
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  courses        Course[] @relation("InstructorCourses")
+  quizAttempts   QuizAttempt[]
+  availabilities Availability[]
+  bookings       Booking[] @relation("StudentBookings")
+
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+
+  instructorId String
+  instructor   User @relation("InstructorCourses", fields: [instructorId], references: [id])
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  modules Module[]
+}
+
+model Module {
+  id       String @id @default(uuid())
+  title    String
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  tenantId String
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id      String     @id @default(uuid())
+  title   String
+  type    LessonType
+  content String?
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id])
+
+  tenantId String
+
+  quiz Quiz?
+}
+
+model Quiz {
+  id       String @id @default(uuid())
+  lessonId String @unique
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+
+  tenantId String
+
+  questions Question[]
+  attempts  QuizAttempt[]
+}
+
+model Question {
+  id            String @id @default(uuid())
+  questionText  String
+  options       Json
+  correctAnswer String
+
+  quizId String
+  quiz   Quiz @relation(fields: [quizId], references: [id])
+
+  tenantId String
+}
+
+model QuizAttempt {
+  id        String @id @default(uuid())
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id])
+
+  quizId String
+  quiz   Quiz @relation(fields: [quizId], references: [id])
+
+  answers Json
+  score   Int
+
+  tenantId String
+  createdAt DateTime @default(now())
+}
+
+model Availability {
+  id           String   @id @default(uuid())
+  instructorId String
+  instructor   User     @relation(fields: [instructorId], references: [id])
+
+  startTime DateTime
+  endTime   DateTime
+
+  tenantId String
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  studentId    String
+  student      User          @relation("StudentBookings", fields: [studentId], references: [id])
+
+  instructorId String
+  startTime    DateTime
+  endTime      DateTime
+  status       BookingStatus @default(REQUESTED)
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  userId        String
+  tenantId      String
+  action        String
+  entityType    String
+  entityId      String
+  beforeState   Json?
+  afterState    Json?
+  correlationId String
+  createdAt     DateTime @default(now())
+}
+
