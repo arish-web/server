@@ -26,11 +26,10 @@ const app = express();
 /* -------------------- GLOBAL MIDDLEWARE -------------------- */
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://client-airman.vercel.app",
-    ],
-    credentials: true,
+    origin: "https://client-airman.vercel.app", // OR  frontend port
+    credentials: true, // REQUIRED for cookies / auth
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
