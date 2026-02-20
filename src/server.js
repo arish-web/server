@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
@@ -28,7 +29,7 @@ app.use(
   cors({
     origin: [
       "https://client-airman.vercel.app",
-      "http://localhost:5173"
+      "http://localhost:5000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
