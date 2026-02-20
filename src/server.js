@@ -27,12 +27,8 @@ const app = express();
 /* -------------------- GLOBAL MIDDLEWARE -------------------- */
 app.use(
   cors({
-    origin: [
-      "https://client-lyart-nine-67.vercel.app",
-      "http://localhost:5000"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: process.env.CLIENT_URL,
+    credentials: true,
   })
 );
 app.use(express.json());
