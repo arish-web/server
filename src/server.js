@@ -28,7 +28,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://client-airman.vercel.app",
+      "https://client-lyart-nine-67.vercel.app",
       "http://localhost:5000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
