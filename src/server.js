@@ -26,8 +26,10 @@ const app = express();
 /* -------------------- GLOBAL MIDDLEWARE -------------------- */
 app.use(
   cors({
-    origin: "https://client-airman.vercel.app", // OR  frontend port
-    credentials: true, // REQUIRED for cookies / auth
+    origin: [
+      "https://client-airman.vercel.app",
+      "http://localhost:5173"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -68,7 +70,7 @@ app.get("/admin-only", auth, role(["ADMIN"]), (req, res) => {
 });
 
 /* -------------------- SERVER START -------------------- */
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
