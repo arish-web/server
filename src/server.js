@@ -24,14 +24,20 @@ const role = require("./middleware/role.middleware");
 const app = express();
 
 /* -------------------- GLOBAL MIDDLEWARE -------------------- */
+// app.use(
+//   cors({
+//     origin: [
+//       "https://client-airman.vercel.app",
+//       "http://localhost:5173"
+//     ],
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 app.use(
   cors({
-    origin: [
-      "https://client-airman.vercel.app",
-      "http://localhost:5173"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: true, // allow all origins temporarily (fix deployment CORS instantly)
+    credentials: true,
   })
 );
 app.use(express.json());
