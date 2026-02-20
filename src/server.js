@@ -28,7 +28,7 @@ app.use(
   cors({
     origin: "https://client-airman.vercel.app", // OR  frontend port
     credentials: true, // REQUIRED for cookies / auth
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
