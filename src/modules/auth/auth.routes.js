@@ -5,7 +5,8 @@ const auth = require("../../middleware/auth.middleware");
 
 const {
   login,
-  getInstructors,
+  refreshToken,
+  getInstructors
 } = require("./auth.controller");
 
 /*
@@ -25,6 +26,7 @@ router.post("/login", login);
 // Get all instructors for the same tenant
 router.get("/instructors", auth, getInstructors);
 
+router.post("/refresh", refreshToken);
 
 module.exports = router;
 
